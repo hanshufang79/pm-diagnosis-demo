@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>产品经理认知跃迁 · 阶段诊断</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F5F0;--sur:#fff;--ink:#1A1814;--ink2:#6B6760;--ink3:#A09D98;--green:#2D5A3D;--gl:#EAF2ED;--warm:#C4763A;--wl:#FBF3EC;--bd:rgba(26,24,20,.10);--bd2:rgba(26,24,20,.18);--r:14px;--rs:8px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+.page{display:none;flex-direction:column;min-height:100vh}.page.active{display:flex}
+
+/* COVER */
+.cover{flex:1;display:flex;flex-direction:column;padding:0 24px 40px}
+.cover-top{flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:56px;padding-bottom:24px}
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:.12em;color:var(--green);text-transform:uppercase;margin-bottom:18px}
+.cover-title{font-family:'Noto Serif SC',serif;font-size:28px;font-weight:600;line-height:1.4;margin-bottom:16px}
+.cover-title em{font-style:normal;color:var(--green)}
+.cover-desc{font-size:14px;line-height:1.8;color:var(--ink2);margin-bottom:28px}
+.cover-stats{display:flex;gap:28px;margin-bottom:32px}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat-n{font-family:'Noto Serif SC',serif;font-size:24px;font-weight:600}
+.stat-l{font-size:11px;color:var(--ink3)}
+.cover-quote{background:var(--gl);border-left:3px solid var(--green);border-radius:0 var(--rs) var(--rs) 0;padding:14px 16px;margin-bottom:32px}
+.cover-quote p{font-size:13px;line-height:1.75;color:var(--green)}
+.cover-quote span{display:block;font-size:11px;color:#5A8A6A;margin-top:7px}
+.btn-main{width:100%;padding:16px;background:var(--ink);color:#fff;border:none;border-radius:50px;font-family:'Noto Sans SC',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:opacity .15s}
+.btn-main:active{opacity:.8}
+.cover-note{text-align:center;font-size:11px;color:var(--ink3);margin-top:14px}
+
+/* QUIZ */
+.quiz-header{padding:18px 24px 14px;position:sticky;top:0;background:var(--bg);z-index:10}
+.prog-row{display:flex;align-items:center;gap:10px}
+.prog-lbl{font-size:11px;font-weight:500;color:var(--green);letter-spacing:.04em;flex-shrink:0;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog-track{flex:1;height:3px;background:var(--bd);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--green);border-radius:2px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.prog-n{font-size:12px;color:var(--ink3);white-space:nowrap}
+.quiz-body{flex:1;padding:18px 24px 32px;overflow-y:auto}
+.qb{display:none}.qb.active{display:block;animation:fadeUp .3s ease}
+.q-scene{background:var(--wl);border-left:3px solid var(--warm);border-radius:0 var(--rs) var(--rs) 0;padding:12px 14px;margin-bottom:16px}
+.q-scene p{font-size:12px;line-height:1.8;color:#8B5A2B;font-style:italic}
+.q-text{font-family:'Noto Serif SC',serif;font-size:18px;font-weight:600;line-height:1.5;margin-bottom:18px}
+.opts{display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
+.opt{padding:13px 15px 13px 18px;border:1px solid var(--bd2);border-radius:var(--rs);background:var(--sur);font-size:14px;line-height:1.6;color:var(--ink);cursor:pointer;text-align:left;transition:all .15s;position:relative}
+.opt::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:var(--green);border-radius:4px 0 0 4px;transition:width .15s}
+.opt.sel{background:var(--gl);border-color:var(--green);color:var(--green)}.opt.sel::before{width:3px}
+.quiz-nav{display:flex;align-items:center;gap:10px}
+.btn-back{padding:13px 20px;background:transparent;border:1px solid var(--bd2);border-radius:50px;font-family:'Noto Sans SC',sans-serif;font-size:14px;color:var(--ink2);cursor:pointer;flex-shrink:0}
+.btn-next{flex:1;padding:13px;background:var(--ink);color:#fff;border:none;border-radius:50px;font-family:'Noto Sans SC',sans-serif;font-size:15px;font-weight:500;cursor:pointer;opacity:.3;transition:opacity .2s;pointer-events:none}
+.btn-next.ready{opacity:1;pointer-events:auto}
+
+/* RESULT */
+.rw{flex:1;display:flex;flex-direction:column}
+.rhero{padding:48px 24px 32px;color:#fff}
+.r-ey{font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.65;margin-bottom:10px}
+.r-name{font-family:'Noto Serif SC',serif;font-size:25px;font-weight:600;line-height:1.35;margin-bottom:6px}
+.r-sub{font-size:13px;opacity:.75;margin-bottom:22px;line-height:1.6}
+.sdots{display:flex;gap:6px}
+.sdot{height:5px;border-radius:3px;background:rgba(255,255,255,.22);transition:all .5s;flex:1}
+.sdot.on{background:rgba(255,255,255,.88)}
+.rbody{flex:1;padding:26px 24px 44px;overflow-y:auto}
+.rsec{margin-bottom:26px}
+.rsec-title{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:11px}
+.r-desc{font-size:14px;line-height:1.85;color:var(--ink2)}
+.r-quote{background:var(--gl);border-left:3px solid var(--green);border-radius:0 var(--rs) var(--rs) 0;padding:13px 15px;margin-top:14px}
+.r-quote p{font-size:13px;line-height:1.8;color:var(--green)}
+.r-quote em{font-style:normal;font-weight:500}
+.dc{background:var(--wl);border:1px solid rgba(196,118,58,.22);border-radius:var(--r);padding:16px 18px;margin-bottom:10px}
+.dc-lbl{font-size:11px;font-weight:500;color:var(--warm);letter-spacing:.06em;margin-bottom:7px}
+.dc-txt{font-size:13px;line-height:1.8;color:#6B4020}
+.alist{display:flex;flex-direction:column;gap:9px}
+.aitem{background:var(--sur);border:1px solid var(--bd);border-radius:var(--rs);padding:13px 15px}
+.anum{font-size:10px;font-weight:500;color:var(--ink3);letter-spacing:.07em;margin-bottom:4px}
+.atxt{font-size:13px;line-height:1.75;color:var(--ink)}
+.nhint{background:var(--bg);border:1px solid var(--bd2);border-radius:var(--rs);padding:12px 15px;font-size:13px;line-height:1.7;color:var(--ink2);margin-top:10px}
+.nhint strong{color:var(--ink);font-weight:500}
+.cta-card{background:var(--ink);border-radius:var(--r);padding:24px 20px;margin-top:6px}
+.cta-title{font-family:'Noto Serif SC',serif;font-size:17px;font-weight:600;color:#fff;margin-bottom:8px;line-height:1.4}
+.cta-desc{font-size:13px;color:rgba(255,255,255,.62);line-height:1.7;margin-bottom:18px}
+.btn-cta{display:block;width:100%;padding:14px;background:#fff;color:var(--ink);border:none;border-radius:50px;font-family:'Noto Sans SC',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:9px;transition:opacity .15s}
+.btn-cta:active{opacity:.85}
+.btn-cta.ghost{background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.25);margin-bottom:0}
+.copy-tip{background:var(--gl);border-radius:var(--rs);padding:11px 14px;margin-top:12px;font-size:12px;color:var(--green);line-height:1.65;text-align:center;display:none}
+.restart-row{text-align:center;margin-top:22px}
+.btn-restart{background:transparent;border:none;font-size:12px;color:var(--ink3);cursor:pointer;font-family:'Noto Sans SC',sans-serif;text-decoration:underline}
+
+.h1{background:#4A7C59}.h2{background:#3A6B8A}.h3{background:#7A5C3A}.h4{background:#5A4A7A}.h5{background:#1A1814}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div class="page active" id="page-cover">
+<div class="cover">
+  <div class="cover-top">
+    <div class="eyebrow">产品经理认知跃迁 · 阶段诊断</div>
+    <h1 class="cover-title">你现在停在<em>哪一层</em>？<br>8道题照出你的认知边界</h1>
+    <p class="cover-desc">产品有四层结构：功能、平台生态、规则体系、组织系统。产品经理的认知，也对应着四个层级。你现在能看见哪一层，决定了你在AI时代的位置。</p>
+    <div class="cover-stats">
+      <div class="stat"><span class="stat-n">8</span><span class="stat-l">道题目</span></div>
+      <div class="stat"><span class="stat-n">3</span><span class="stat-l">分钟完成</span></div>
+      <div class="stat"><span class="stat-n">4+</span><span class="stat-l">认知层级</span></div>
+    </div>
+    <div class="cover-quote">
+      <p>「回头看这二十年，其实像是在不断换一个视角看产品——最早看到的是功能，后来看到生态，再后来看到规则，然后看到组织。每一次，都以为自己看到了全部，然后发现下面还有一层。」</p>
+      <span>—— 23年产品经验复盘</span>
+    </div>
+  </div>
+  <button class="btn-main" onclick="startQuiz()">开始诊断 →</button>
+  <p class="cover-note">完全免费 · 即时呈现结果 · 无需注册</p>
+</div>
+</div>
+
+<div class="page" id="page-quiz">
+  <div class="quiz-header">
+    <div class="prog-row">
+      <div class="prog-lbl" id="plbl"></div>
+      <div class="prog-track"><div class="prog-fill" id="pfill" style="width:0%"></div></div>
+      <div class="prog-n" id="pn">1/8</div>
+    </div>
+  </div>
+  <div class="quiz-body" id="quiz-body"></div>
+</div>
+
+<div class="page" id="page-result">
+  <div class="rw">
+    <div class="rhero" id="rhero">
+      <div class="r-ey">你的诊断结果</div>
+      <div class="r-name" id="rname"></div>
+      <div class="r-sub" id="rsub"></div>
+      <div class="sdots">
+        <div class="sdot" data-i="1"></div><div class="sdot" data-i="2"></div>
+        <div class="sdot" data-i="3"></div><div class="sdot" data-i="4"></div>
+        <div class="sdot" data-i="5"></div>
+      </div>
+    </div>
+    <div class="rbody">
+      <div class="rsec">
+        <div class="rsec-title">你现在的位置</div>
+        <div class="r-desc" id="rdesc"></div>
+        <div class="r-quote" id="rquote"></div>
+      </div>
+      <div class="rsec">
+        <div class="rsec-title">诊断分析</div>
+        <div class="dc" id="dc1"></div>
+        <div class="dc" id="dc2"></div>
+      </div>
+      <div class="rsec">
+        <div class="rsec-title">跃迁到下一层的实操建议</div>
+        <div class="alist" id="ractions"></div>
+        <div class="nhint" id="rnext"></div>
+      </div>
+      <div class="rsec">
+        <div class="cta-card">
+          <div class="cta-title">想聊聊你的具体情况？</div>
+          <div class="cta-desc">我在小红书持续更新《产品经理认知跃迁》系列，针对每个层级都有更深的内容。关注后私信我你的诊断结果，我会结合你的情况给一些具体建议。</div>
+          <button class="btn-cta" onclick="copyXhs()">复制账号，去小红书找我 →</button>
+          <button class="btn-cta ghost" onclick="shareResult()">分享给朋友，看他在哪一层</button>
+        </div>
+        <div class="copy-tip" id="copy-tip">已复制「兰小诺」· 打开小红书搜索关注，私信我你的诊断层级 👋</div>
+      </div>
+      <div class="restart-row"><button class="btn-restart" onclick="restart()">重新诊断一次</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const XHS = '兰小诺';
+
+const questions = [
+  {
+    stage:'第一层 · 产品功能',
+    scene:'刚入行时，我在淘宝开放平台接到第一个功能需求，脑子里只有一件事：这个需求能不能落地、怎么设计、什么时候上线。那时候的世界，就是需求和功能。',
+    q:'你接到一个新需求，第一步通常做什么？',
+    opts:['理清需求，直接开始写PRD或画原型','先问清楚业务方想解决什么问题，再判断该不该做','分析这个需求影响哪些角色和生态关系，再决定方向','先判断它对应的是组织哪个层面的问题，功能只是其中一个解法']
+  },
+  {
+    stage:'第一层 · 产品功能',
+    scene:'功能产品经理的日常：画原型、写文档、跟进开发、推动上线。做得越熟越快，感觉自己在成长。但有一天我发现，做再多功能，有些问题根本解决不了。',
+    q:'你有没有遇到过"功能做完了但问题没解决"的情况？',
+    opts:['很少，功能上线就算完成任务','有过，以为是功能没做好，继续迭代优化','意识到问题出在生态关系上，不是单个功能能解决的','清楚地看出这是规则或组织层面的问题，功能只是表象']
+  },
+  {
+    stage:'第二层 · 平台生态',
+    scene:'做淘宝开放平台ISV接入时，我第一次面对不是单一用户，而是开发者、商家、平台、服务商四类角色。才意识到产品是一个生态系统，每个角色都在影响整体价值。',
+    q:'你负责的产品，你脑海里的"用户"是什么样的？',
+    opts:['主要是一类用户，我为他们解决具体问题','有几类用户，但核心精力放在最主要的那类','有多方角色，需要同时考虑他们之间的关系和利益平衡','用户只是生态的一部分，我更关注整个平台系统的运转逻辑']
+  },
+  {
+    stage:'第二层 · 平台生态',
+    scene:'平台产品的核心问题不是"功能好不好"，而是"生态转不转得起来"。吸引开发者入驻、让商家愿意用、让平台形成正循环——背后是完全不同的设计逻辑。',
+    q:'你有没有思考过：如何让平台多方角色都愿意持续留下来并贡献价值？',
+    opts:['没有专门想过，主要关注单类用户的体验','想过，但主要从单个角色的需求出发做设计','有意识地在设计角色之间的连接和价值交换','系统地设计了多方角色的激励机制和正循环路径']
+  },
+  {
+    stage:'第三层 · 规则体系',
+    scene:'做天猫商家产品时，我看到流量规则直接决定商家能否存活。准入规则决定谁能进，交易规则决定怎么玩，流量分配规则决定谁能赢。功能只是规则的载体，规则才是真正的权力结构。',
+    q:'你的产品里，有没有什么"规则"在决定用户的命运？',
+    opts:['规则是运营或业务方定的，我主要负责功能实现','我知道有规则，但设计时主要还是从功能角度出发','我开始参与规则设计，意识到规则比功能更根本','规则设计是我工作的核心，功能只是规则的呈现界面']
+  },
+  {
+    stage:'第三层 · 规则体系',
+    scene:'规则产品经理做的事，本质是在设计"谁能进、怎么玩、如何分配"的体系。这套体系决定了整个生态的走向，影响力远大于任何单一功能。',
+    q:'当用户之间产生利益冲突，你通常怎么处理？',
+    opts:['尽量满足主要用户的需求，其他角色次要考虑','尽量平衡各方需求，找折中方案','从平台整体利益出发，设计规则来引导各方行为','通过规则体系设计，让各方在竞争中形成对平台有利的正向博弈']
+  },
+  {
+    stage:'第四层 · 组织系统',
+    scene:'做HR人才发展产品时，我才真正看见冰山下面是什么。很多产品推进不动，不是功能不好、规则不对，而是组织结构本身的问题——谁在决策、谁承担责任、信息如何流动。',
+    q:'你的产品推进遇到阻力，最根本的原因通常是什么？',
+    opts:['技术实现难度大，或者资源不够','需求不清晰，或者用户反馈不一致','利益相关方太多，各方目标不统一','组织的决策链和信息流本身有问题，功能和规则都只是症状']
+  },
+  {
+    stage:'AI时代 · 你的判断',
+    scene:'最近几年做企业智能体相关的事，我发现AI正在接管写代码、写文档、出方案这些工作。但一个新问题出现了：当执行都可以被AI替代，产品经理的核心价值到底是什么？',
+    q:'AI时代，你认为产品经理最不可替代的能力是什么？',
+    opts:['熟练使用AI工具，提升个人执行效率','更深的用户洞察和需求判断，AI做不到真正理解人','系统设计能力——设计规则、平台和组织运转逻辑','判断力和决策力——在复杂系统里持续做出正确的判断']
+  }
+];
+
+const stages = {
+  1:{
+    name:'第一层：功能产品经理 · 执行者',sub:'你的世界由需求、原型和上线节点构成',hc:'h1',
+    desc:'你现在的核心工作是把需求变成系统功能——需求分析、产品设计、功能迭代、项目推进。关注的是功能好不好用、流程顺不顺、体验是不是更好。这是所有产品人的起点，也是大多数人停留最久的地方。',
+    quote:'就像我刚接手淘宝开放平台功能时，<em>最关心的是"这个需求能不能落地"，世界只有功能和流程。</em>这一阶段本质是在解决一个问题：如何把需求变成系统功能。停在这里不是错，但要知道边界在哪里。',
+    d1l:'你目前能看见的',d1t:'功能的好坏、体验的流畅程度、需求的合理性。你擅长把模糊的需求变成清晰的设计，擅长推进项目落地——这是真实的价值，也是基础能力。',
+    d2l:'你目前还看不见的',d2t:'功能背后的生态逻辑——为什么有些好功能上线了也没用？因为影响产品价值的，是多方角色之间的关系，不是单个功能的质量。平台生态这一层，你还没有进入。',
+    actions:['下一个需求文档里，加一个"角色分析"章节：这个功能影响哪些角色？每个角色的诉求是什么？他们之间有没有利益冲突？','找产品里一个你一直觉得"莫名其妙"的规则，去追问它是谁定的、为什么这么定——背后通常藏着生态博弈逻辑。','选一个核心功能，试着画出它服务的所有角色，以及角色之间的价值流动关系。这张图，就是你进入第二层的起点。'],
+    next:'当你开始自发地问"这个功能对不同角色的影响是什么"，而不只是问"这个功能怎么做"，说明你开始进入第二层了。'
+  },
+  2:{
+    name:'第二层：平台产品经理 · 分析师',sub:'你已经看见多方角色，产品是一个生态系统',hc:'h2',
+    desc:'你已经开始看见多方角色，意识到产品不是单体功能，而是一个生态系统。你思考的不只是单个用户的体验，而是开发者、商家、平台、服务商之间如何形成正循环。这是一次真正的视角跃升。',
+    quote:'在做淘宝开放平台ISV接入时，我第一次真正理解这一层。<em>产品不再只是功能系统，而是一个生态系统——如何吸引开发者、让商家愿意用、让平台形成正循环，这才是核心问题。</em>',
+    d1l:'你目前能看见的',d1t:'多方角色的诉求、角色之间的关系、平台的生态逻辑。你知道光做好功能是不够的，需要让各方角色都找到留在平台的理由。',
+    d2l:'你目前还看不见的',d2t:'规则才是生态运转的真正引擎。谁能进生态、谁能获得机会——是准入规则、交易规则、流量分配规则说了算，不是功能设计。你还没有把规则体系当成核心工作。',
+    actions:['画一张你们产品的"角色关系地图"：每个角色的核心诉求是什么、他们之间的利益冲突在哪里、目前是什么在维持生态平衡？','找出你们平台最关键的一条规则（准入、流量分配或激励），分析它的设计逻辑——它在引导什么样的行为，产生了什么生态结果？','下次提需求时，试着用这个框架说服老板：这个需求对生态里哪类角色有利、对哪类有影响、整体上会让生态更健康还是更脆弱？'],
+    next:'当你开始主动参与规则的设计，而不只是在规则框架内做功能，说明你开始进入第三层了。'
+  },
+  3:{
+    name:'第三层：规则产品经理 · 策略家',sub:'你看见了规则体系，这是生态运转的真正引擎',hc:'h3',
+    desc:'你已经看见了功能背后的规则层。你知道准入规则、交易规则、流量分配规则才是真正决定生态走向的东西。功能只是规则的载体，规则才是权力结构。到了这一层，你已经站在了大多数产品经理看不到的地方。',
+    quote:'做天猫商家产品时，我看到流量规则直接决定了商家能否存活。<em>谁能进生态、谁能获得机会——是规则说了算。这一阶段的产品经理，其实在参与的是权力结构的设计。</em>',
+    d1l:'你目前能看见的',d1t:'规则体系如何影响生态行为，功能如何承载规则，不同规则设计带来的生态结果。你有能力设计影响大量用户行为的规则，这是真正的杠杆能力。',
+    d2l:'你目前还看不见的',d2t:'规则再完善，如果组织的决策链和信息流有问题，规则在执行中也会变形。谁在决策、谁承担责任、信息如何流动——组织系统这一层，才是规则能否真正落地的土壤。',
+    actions:['选一条你设计过的规则，追踪它在组织内部的执行路径：谁做的决策，谁在承担结果，信息如何流动，哪个环节出现了变形？','和业务负责人做一次只聊组织的对话：我们现在最大的决策盲点是什么？信息传递在哪里失真？谁应该做决策但没有做？','当下一个项目推进受阻时，有意识地诊断：这是功能层、规则层，还是组织层的问题？对症才能下药。'],
+    next:'当你开始把"组织如何运转"当成一个需要设计的产品来思考，说明你开始进入第四层了。'
+  },
+  4:{
+    name:'第四层：组织产品经理 · 远见者',sub:'你看见了冰山下面——组织系统才是产品成败的根本',hc:'h4',
+    desc:'你已经看见了冰山下面的部分。组织结构、决策链路、信息流动、协作效率——这些才是产品成败的真正决定因素。到了这一层，你做的已经不只是产品，而是在设计组织运行系统本身。',
+    quote:'做HR人才发展产品时，我才真正意识到：<em>很多企业的问题，既不是功能问题，也不是规则问题，而是组织结构问题——谁在决策、谁承担责任、信息如何流动。产品只是冰山一角。</em>',
+    d1l:'你目前能看见的',d1t:'组织的决策链路、信息流动方式、协作效率，以及这些如何影响产品的走向。你能看见大多数人看不见的复杂性，这是稀缺的系统级视角。',
+    d2l:'AI时代的新命题',d2t:'当AI接管大量执行性工作，组织需要回答一个新问题：如何让"持续做出正确判断"成为一种可设计的系统能力？这不是工具问题，而是组织系统设计问题——这是通往第五层的入口。',
+    actions:['画出你们组织的"判断系统"：重要决策是怎么触发的，信息从哪里来，经过哪些人，谁有最终判断权，错误决策如何被发现和纠正？','在你负责的产品线里，找3个最重要的决策场景，评估：哪些决策可以被AI辅助，哪些必须由有上下文的人来做？如何设计人机协作的判断流程？','把你对"组织如何运转"的理解写成一份内部文档分享给团队——能写清楚，说明你真正想通了；写的过程本身，也会暴露你还没想清楚的地方。'],
+    next:'当你开始思考如何把AI作为组织系统的一部分来设计，而不只是用AI提升个人效率，说明你开始进入第五层了。'
+  },
+  5:{
+    name:'第五层：AI时代的系统设计者 · 组织设计者',sub:'你站在认知跃迁地图的最前沿',hc:'h5',
+    desc:'你已经站在了认知跃迁地图的最前沿。你看见的不只是功能、生态、规则、组织，而是这一切在AI时代如何重新组合——少量核心决策者 + 大量AI能力 + 多角色协同系统。这个阶段的人极少。',
+    quote:'最近做企业智能体相关的事，我开始看到第五个阶段。<em>未来的公司，很可能是：少量核心决策者 + 大量AI能力 + 多角色协同系统。产品经理走到这里，设计的已经是组织运行系统本身。</em>',
+    d1l:'你目前的稀缺价值',d1t:'你能同时看见功能、生态、规则、组织四个层次，并且开始思考AI如何重构这些层次之间的关系。这种系统级的判断力，是AI真正难以替代的能力。',
+    d2l:'这个阶段真正的挑战',d2t:'视野不是瓶颈，落地才是。如何把"设计组织系统"转化成具体可执行的工作，如何让这套思维被组织接受，如何在AI高速迭代中保持判断的稳定性——这才是真正的功课。',
+    actions:['把你对"AI时代产品经理的核心价值"的理解写成一篇文章——能让别人看懂，才说明自己真的想清楚了；写的过程本身就是最好的思维检验。','找1-2个中小企业的真实场景，用四层框架（功能→生态→规则→组织）帮他们诊断卡在哪一层，在实战中打磨你的方法论。','建立自己的"判断复盘系统"：记录每一个重要判断和实际结果。三个月后回头看，你会发现自己判断力的真实模式和盲区。'],
+    next:'你已经在地图的最前沿。接下来的功课不是继续跃迁，而是把这套认知变成可以复制、可以传播、可以帮助别人的方法论。'
+  }
+};
+
+let ans = new Array(8).fill(null), cur = 0;
+
+function buildQuiz() {
+  document.getElementById('quiz-body').innerHTML = questions.map((q,i)=>`
+    <div class="qb ${i===0?'active':''}" id="qb-${i}">
+      <div class="q-scene"><p>${q.scene}</p></div>
+      <p class="q-text">${q.q}</p>
+      <div class="opts">${q.opts.map((o,j)=>`<button class="opt" data-q="${i}" data-s="${j+1}" onclick="pick(this)">${o}</button>`).join('')}</div>
+      <div class="quiz-nav">
+        ${i>0?`<button class="btn-back" onclick="goQ(${i-1})">← 上一题</button>`:'<span></span>'}
+        <button class="btn-next" id="bn-${i}" onclick="goNext()">${i<7?'下一题 →':'查看我的结果 →'}</button>
+      </div>
+    </div>`).join('');
+}
+
+function pick(btn){
+  const q=parseInt(btn.dataset.q);
+  btn.closest('.opts').querySelectorAll('.opt').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  ans[q]=parseInt(btn.dataset.s);
+  document.getElementById(`bn-${q}`).classList.add('ready');
+}
+
+function updateProg(){
+  document.getElementById('pfill').style.width=(cur/8*100)+'%';
+  document.getElementById('pn').textContent=(cur+1)+'/8';
+  document.getElementById('plbl').textContent=questions[cur].stage;
+}
+
+function goQ(idx){
+  document.querySelectorAll('.qb').forEach(b=>b.classList.remove('active'));
+  document.getElementById(`qb-${idx}`).classList.add('active');
+  cur=idx; updateProg();
+  document.getElementById('quiz-body').scrollTop=0;
+}
+
+function goNext(){
+  if(ans[cur]===null)return;
+  cur<7?goQ(cur+1):showResult();
+}
+
+function calcStage(){
+  const t=ans.reduce((a,b)=>a+(b||1),0);
+  if(t<=10)return 1; if(t<=16)return 2; if(t<=22)return 3; if(t<=27)return 4; return 5;
+}
+
+function showResult(){
+  document.getElementById('page-quiz').classList.remove('active');
+  document.getElementById('page-result').classList.add('active');
+  window.scrollTo(0,0);
+  const s=calcStage(), d=stages[s];
+  document.getElementById('rhero').className='rhero '+d.hc;
+  document.getElementById('rname').textContent=d.name;
+  document.getElementById('rsub').textContent=d.sub;
+  document.querySelectorAll('.sdot').forEach(dot=>dot.classList.toggle('on',parseInt(dot.dataset.i)<=s));
+  document.getElementById('rdesc').textContent=d.desc;
+  document.getElementById('rquote').innerHTML=`<p>${d.quote}</p>`;
+  document.getElementById('dc1').innerHTML=`<div class="dc-lbl">${d.d1l}</div><div class="dc-txt">${d.d1t}</div>`;
+  document.getElementById('dc2').innerHTML=`<div class="dc-lbl">${d.d2l}</div><div class="dc-txt">${d.d2t}</div>`;
+  document.getElementById('ractions').innerHTML=d.actions.map((a,i)=>`<div class="aitem"><div class="anum">建议 ${i+1}</div><div class="atxt">${a}</div></div>`).join('');
+  document.getElementById('rnext').innerHTML=`<strong>跃迁信号：</strong>${d.next.replace('跃迁信号：','')}`;
+}
+
+function copyXhs(){
+  const tip=document.getElementById('copy-tip');
+  const fn=(t)=>{
+    if(navigator.clipboard){navigator.clipboard.writeText(t).then(()=>tip.style.display='block');}
+    else{const el=document.createElement('textarea');el.value=t;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);tip.style.display='block';}
+  };
+  fn(XHS);
+}
+
+function shareResult(){
+  const s=calcStage(),d=stages[s];
+  const url=window.location.href;
+  const text=`我做了产品经理认知跃迁诊断，结果是「${d.name}」\n\n${d.sub}\n\n你在哪一层？来测测 👇\n${url}`;
+  if(navigator.share){navigator.share({title:'产品经理认知跃迁阶段诊断',text});}
+  else if(navigator.clipboard){navigator.clipboard.writeText(text);alert('结果文案已复制，去分享吧~');}
+}
+
+function startQuiz(){
+  document.getElementById('page-cover').classList.remove('active');
+  document.getElementById('page-quiz').classList.add('active');
+  updateProg();
+}
+
+function restart(){
+  ans.fill(null); cur=0;
+  document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+  document.querySelectorAll('[id^=bn-]').forEach(b=>b.classList.remove('ready'));
+  document.getElementById('copy-tip').style.display='none';
+  document.getElementById('page-result').classList.remove('active');
+  document.getElementById('page-cover').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+buildQuiz(); updateProg();
+</script>
+</body>
+</html>
